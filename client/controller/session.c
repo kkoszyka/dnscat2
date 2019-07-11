@@ -97,7 +97,8 @@ static void poll_driver_for_data(session_t *session)
   if(!data)
   {
     if(buffer_get_remaining_bytes(session->outgoing_buffer) == 0)
-      session_kill(session);
+      if(!session->is_shutdown)
+        session_kill(session);
   }
   else
   {
@@ -433,7 +434,8 @@ static NBBOOL _handle_fin(session_t *session, packet_t *packet)
   LOG_FATAL("Received FIN: (reason: '%s') - closing session", packet->body.fin.reason);
   you_can_transmit_now(session);
   session->missed_transmissions = 0;
-  session_kill(session);
+  if(!session->is_shutdown)
+    session_kill(session);
 
   return TRUE;
 }

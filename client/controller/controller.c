@@ -228,8 +228,6 @@ void controller_destroy()
 
   while(entry)
   {
-    if(!entry->session->is_shutdown)
-      session_kill(entry->session);
     session_destroy(entry->session);
 
     prev_session = entry;
